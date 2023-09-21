@@ -1,0 +1,35 @@
+name: Create GitHub Issues
+
+on:
+  push:
+    branches:
+      - main  # Modify this branch name as needed
+
+jobs:
+  create-issues:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Read usernames from file
+      id: read_usernames
+      run: echo "::set-output name=usernames::$(cat usernames.txt)"
+
+    - name: Create GitHub Issues
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      run: |
+        usernames="$USERNAMES"
+        IFS=$'\n' read -d '' -ra users <<< "$usernames"
+        for user in "${users[@]}"; do
+          issue_title="Issue for $user"
+          issue_body="This issue is assigned to @$user."
+          echo "Creating issue: $issue_title"
+          curl -X POST \
+            -H "Authorization: token $GITHUB_TOKEN" \
+            -H "Accept: application/vnd.github.v3+json" \
+            https://api.github.com/repos/shivscaler/test-auto-issue-creation/issues \
+            -d "{\"title\":\"$issue_title\",\"body\":\"$issue_body\",\"assignees\":[\"$user\"]}"
+        done
