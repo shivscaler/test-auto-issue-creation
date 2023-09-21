@@ -19,7 +19,7 @@ jobs:
 
     - name: Debugging Output
       run: |
-        echo "GITHUB_TOKEN: $GITHUB_TOKEN"
+        echo "MY_GITHUB_TOKEN: $MY_GITHUB_TOKEN"
         echo "USERNAMES: $USERNAMES"
 
 
