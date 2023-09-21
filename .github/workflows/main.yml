@@ -17,6 +17,12 @@ jobs:
       id: read_usernames
       run: echo "::set-output name=usernames::$(cat usernames.txt)"
 
+    - name: Debugging Output
+      run: |
+        echo "GITHUB_TOKEN: $GITHUB_TOKEN"
+        echo "USERNAMES: $USERNAMES"
+
+
     - name: Create GitHub Issues
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -33,3 +39,5 @@ jobs:
             https://api.github.com/repos/shivscaler/test-auto-issue-creation/issues \
             -d "{\"title\":\"$issue_title\",\"body\":\"$issue_body\",\"assignees\":[\"$user\"]}"
         done
+      
+   
